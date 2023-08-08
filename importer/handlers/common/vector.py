@@ -794,6 +794,7 @@ class BaseVectorFileHandler(BaseHandler):
             f"Rollback dynamic model & ogr2ogr step in progress for execid: {exec_id} resource published was: {instance_name}"
         )
         schema = None
+        instance_name = self.fixup_name(instance_name)
         if os.getenv("IMPORTER_ENABLE_DYN_MODELS", False):
             schema = ModelSchema.objects.filter(name=instance_name).first()
         if schema is not None:

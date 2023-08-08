@@ -1,12 +1,12 @@
 from rest_framework import serializers
 from dynamic_rest.serializers import DynamicModelSerializer
-from geonode.upload.models import Upload
+from geonode.resource.models import ExecutionRequest
 
 
 class ShapeFileSerializer(DynamicModelSerializer):
     class Meta:
         ref_name = "ShapeFileSerializer"
-        model = Upload
+        model = ExecutionRequest
         view_name = "importer_upload"
         fields = (
             "base_file",

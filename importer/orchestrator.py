@@ -12,7 +12,6 @@ from django.utils.module_loading import import_string
 from django_celery_results.models import TaskResult
 from geonode.base.enumerations import STATE_INVALID, STATE_PROCESSED, STATE_RUNNING
 from geonode.resource.models import ExecutionRequest
-from geonode.upload.models import Upload
 from rest_framework import serializers
 
 from importer.api.exception import ImportException
@@ -305,22 +304,6 @@ class ImportOrchestrator:
             name=name,
             source=source,
         )
-        if self.enable_legacy_upload_status:
-            # getting the package name from the base_filename
-            Upload.objects.create(
-                name=legacy_upload_name
-                or os.path.basename(input_params.get("files", {}).get("base_file")),
-                state=STATE_RUNNING,
-                user=user,
-                metadata={
-                    **{
-                        "func_name": func_name,
-                        "step": step,
-                        "exec_id": str(execution.exec_id),
-                    },
-                    **input_params,
-                },
-            )
         return execution.exec_id
 
     def update_execution_request_status(
@@ -340,12 +323,6 @@ class ImportOrchestrator:
 
         ExecutionRequest.objects.filter(exec_id=execution_id).update(**kwargs)
 
-        if self.enable_legacy_upload_status:
-            Upload.objects.filter(metadata__contains=execution_id).update(
-                state=legacy_status,
-                complete=True,
-                metadata={**kwargs, **{"exec_id": execution_id}},
-            )
         if celery_task_request:
             TaskResult.objects.filter(task_id=celery_task_request.id).update(
                 task_args=celery_task_request.args

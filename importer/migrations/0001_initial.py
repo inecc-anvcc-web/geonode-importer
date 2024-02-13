@@ -9,6 +9,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ("base", "0081_alter_resourcebase_alternate"),
+        ("dynamic_models", "0005_auto_20220621_0718")
     ]
 
     operations = [

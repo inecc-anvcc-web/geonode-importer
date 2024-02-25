@@ -122,9 +122,13 @@ class CSVFileHandler(BaseVectorFileHandler):
             )
 
         if not geom_is_in_schema and not has_lat and not has_long:
+            pass
+            """
+            Esto se comentó para permitir subir datos no espaciales desde csv.
             raise InvalidCSVException(
                 f"Not enough geometry field are set. The possibilities are: {','.join(fields)}"
             )
+            """
 
         return True
 
